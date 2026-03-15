@@ -10,7 +10,8 @@ Você irá me ajudar a construir o **People App**, um aplicativo mobile desenvol
 O app possui **3 telas principais**:
 1. **Lista de Usuários** — listagem paginada com filtros
 2. **Perfil do Usuário** — detalhes ricos do usuário selecionado
-3. **Chat** — conversa simulada sem backend
+3. **Meu Perfil** — detalhes do usuário que está utilizando o aplicativo
+4. **Chat** — conversa simulada sem backend
 
 O objetivo é entregar um app **visualmente polido, bem arquitetado e com código limpo**, que impressione o recrutador.
 
@@ -51,6 +52,7 @@ people-app/
 │       ├── _layout.tsx         # Tab navigator
 │       ├── index.tsx           # Tela: Lista de Usuários
 │       ├── favorites.tsx       # Tela: Favoritos
+│       ├── my-profile.tsx      # Tela: Meu Perfil (Logado)
 │       └── [userId]/
 │           ├── profile.tsx     # Tela: Perfil do Usuário
 │           └── chat.tsx        # Tela: Chat
@@ -239,7 +241,19 @@ Estrutura em scroll com seções bem definidas:
 
 ---
 
-## 📱 Tela 3 — Chat
+## 📱 Tela 3 — Meu Perfil (Usuário Logado)
+
+### Objetivo
+Apresentar uma tela nova diretamente ligada ao Bottom Tab Bar principal do App que mostra os dados fixos e fictícios do "Dono do Celular / Usuário Logado". Como o App visualiza pessoas, é imprescindível que o usuário tenha um senso de identidade ao visualizar próprio perfil.
+
+### Layout e Componentes
+- Pode reutilizar perfeitamente os moldes e componentes que existem na `Tela 2 — Perfil do Usuário` (como o `ProfileHeader` e `InfoSection`), no entanto, fornecendo um Mock hardcoded específico para "Meu Perfil".
+- Deve compor a navegação base do App no **Tab Navigator** (ícone de perfil/usuário).
+- **Sem ações de chat ou favoritar**; deve possuir botões visuais (sem funcionalidade obrigatória) como "Editar Perfil" e "Configurações".
+
+---
+
+## 📱 Tela 4 — Chat
 
 ### Estrutura da Tela
 
