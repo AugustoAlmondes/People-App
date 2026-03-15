@@ -24,15 +24,17 @@ Use **exatamente** estas tecnologias. Não substitua sem consultar:
 |---|---|---|
 | Framework | React Native + Expo SDK 52+ | Requisito do desafio |
 | Linguagem | TypeScript | Tipagem, profissionalismo |
-| Navegação | Expo Router | File-based routing, mais moderno |
-| Listas | FlashList (Shopify) | Performance superior ao FlatList |
-| Data fetching | TanStack Query (React Query v5) | Cache, paginação, retry automático |
-| Estado global | Zustand | Leve, moderno, sem boilerplate |
-| Persistência | MMKV (react-native-mmkv) | Chat e favoritos offline |
-| Animações | Reanimated 3 + Gesture Handler | Animações nativas fluidas |
-| Bottom Sheet | @gorhom/bottom-sheet | Filtros e modais |
+| Navegação | Expo Router | Já incluso no Expo, file-based routing |
+| Listas | FlatList nativo (RN) | Suficiente para 20 itens/página, zero dependência |
+| Data fetching | TanStack Query (React Query v5) | Paginação infinita seria complexa sem ele |
+| Estado global | Zustand | Leve, sem boilerplate, evita prop drilling |
+| Persistência | AsyncStorage (`@react-native-async-storage/async-storage`) | Suportado pelo Expo Go, sem build nativo |
+| Animações | Reanimated 3 | Já incluso no Expo SDK, custo zero |
+| Filtros | Modal nativo (RN) | Substitui `@gorhom/bottom-sheet` sem dependência extra |
 | Estilo | StyleSheet nativo + constantes de tema | Sem lib de UI externa |
-| Feedback tátil | expo-haptics | Micro-interações |
+| Feedback tátil | expo-haptics | Já faz parte do Expo |
+| Gradientes | expo-linear-gradient | Já faz parte do Expo |
+| Ícones | @expo/vector-icons | Já faz parte do Expo |
 
 ---
 
@@ -153,15 +155,15 @@ export const colors = {
 - Pull-to-refresh reseta e recarrega a página 1
 - Toque no usuário navega para `/[userId]/profile`
 
-### Filtros (Bottom Sheet)
+### Filtros (Modal Nativo)
 
-Implemente **3 filtros** com `@gorhom/bottom-sheet`:
+Implemente **3 filtros** com `Modal` nativo do React Native (sem dependência extra):
 
 1. **Gênero**: `male` | `female` | `todos`
 2. **Nacionalidade**: lista com bandeiras (BR, US, GB, FR, DE, AU)
 3. **Ordem**: por nome A→Z | Z→A
 
-Os filtros ativos devem aparecer como **chips** abaixo da barra de busca.
+Use `animationType="slide"` no Modal para simular um bottom sheet visualmente. Os filtros ativos devem aparecer como **chips** abaixo da barra de busca.
 
 ### Hook de Paginação
 
@@ -212,7 +214,7 @@ Estrutura em scroll com seções bem definidas:
 │  📞 Contato (tel, email)        │
 ├─────────────────────────────────┤
 │  📍 Localização (cidade, país)  │
-│     [Mini mapa via expo-maps]   │
+│     [Card com coordenadas]      │
 ├─────────────────────────────────┤
 │  👤 Informações pessoais        │
 │     (idade, aniversário, etc.)  │
@@ -231,7 +233,7 @@ Estrutura em scroll com seções bem definidas:
 
 ### Extras do Perfil
 
-- Botão **"Favoritar"** que persiste no MMKV
+- Botão **"Favoritar"** que persiste no AsyncStorage
 - Botão **"Iniciar conversa"** que navega para `/[userId]/chat`
 - Badge de **status online** (aleatório, para efeito visual)
 
@@ -256,7 +258,7 @@ Estrutura em scroll com seções bem definidas:
 
 ### Funcionalidades do Chat
 
-1. **Persistência**: todo histórico salvo por `userId` no MMKV
+1. **Persistência**: todo histórico salvo por `userId` no AsyncStorage
 2. **Resposta simulada**: após 1–2 segundos, o usuário "responde" com frase aleatória
 3. **Indicador de digitando**: animação de 3 pontos pulsando enquanto a resposta não chega
 4. **Status da mensagem**: ✓ enviado → ✓✓ lido (após 1s)
@@ -339,15 +341,13 @@ export async function fetchUsers(params: FetchUsersParams) {
 npx create-expo-app people-app --template blank-typescript
 cd people-app
 
-npx expo install expo-router expo-font expo-haptics expo-linear-gradient
+# Pacotes do ecossistema Expo (já integrados, sem build nativo extra)
+npx expo install expo-router expo-haptics expo-linear-gradient expo-font
 
-npm install @shopify/flash-list
+# Únicas dependências externas necessárias
 npm install @tanstack/react-query
 npm install zustand
-npm install react-native-mmkv
-npm install @gorhom/bottom-sheet react-native-reanimated react-native-gesture-handler
-npm install @expo/vector-icons
-npm install @expo-google-fonts/inter
+npm install @react-native-async-storage/async-storage
 ```
 
 ### app.json — Plugins necessários
@@ -358,8 +358,7 @@ npm install @expo-google-fonts/inter
     "scheme": "people-app",
     "plugins": [
       "expo-router",
-      "react-native-reanimated",
-      ["react-native-mmkv", { "ios": { "enableEncryption": false } }]
+      "react-native-reanimated"
     ]
   }
 }
@@ -427,7 +426,7 @@ style: apply dark glassmorphism theme to profile screen
 
 Em ordem de prioridade/impacto:
 
-1. **Tela de Favoritos** — lista dos usuários favoritados persistidos no MMKV
+1. **Tela de Favoritos** — lista dos usuários favoritados persistidos no AsyncStorage
 2. **Busca local** — filtra por nome dentro da lista já carregada
 3. **Modo offline** — exibe dados do cache quando sem internet
 4. **Notificação local** — simula "nova mensagem" com `expo-notifications`
