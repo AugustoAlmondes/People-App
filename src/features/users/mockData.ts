@@ -93,12 +93,33 @@ export const MOCK_USERS: User[] = [
       country: 'Germany',
       coordinates: { latitude: '52.5200', longitude: '13.4050' }
     },
-    picture: {
-      large: 'https://randomuser.me/api/portraits/men/5.jpg',
-      medium: 'https://randomuser.me/api/portraits/med/men/5.jpg',
+  picture: {
+      large: 'https://randomuser.me/api/portraits/thumb/men/5.jpg',
+      medium: 'https://randomuser.me/api/portraits/thumb/men/5.jpg',
       thumbnail: 'https://randomuser.me/api/portraits/thumb/men/5.jpg'
     },
     nat: 'DE',
-    gender: 'male'
+    gender: 'male',
   }
 ];
+
+export const MY_PROFILE: User = {
+  login: { uuid: 'me-1', username: 'c2s_developer' },
+  name: { title: 'Mr', first: 'Augusto', last: 'Almondes' },
+  email: 'augusto@example.com',
+  phone: '(11) 4002-8922',
+  cell: '(11) 99999-9999',
+  location: {
+    city: 'São Paulo',
+    state: 'SP',
+    country: 'Brazil',
+    coordinates: { latitude: '-23.5505', longitude: '-46.6333' }
+  },
+  picture: {
+    large: 'https://randomuser.me/api/portraits/men/11.jpg',
+    medium: 'https://randomuser.me/api/portraits/med/men/11.jpg',
+    thumbnail: 'https://randomuser.me/api/portraits/thumb/men/11.jpg'
+  },
+  nat: 'BR',
+  gender: 'male'
+};
