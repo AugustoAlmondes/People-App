@@ -57,14 +57,14 @@ export default function UserProfileScreen() {
       <ScrollView bounces={false} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Back Button Overlay */}
-        <SafeAreaView style={styles.backButtonSafeArea}>
+        <View style={styles.backButtonSafeArea}>
           <TouchableOpacity 
             style={[styles.backButton, { backgroundColor: colors[theme].surfaceElevated }]} 
             onPress={() => router.back()}
           >
             <Feather name="arrow-left" size={24} color={colors[theme].text} />
           </TouchableOpacity>
-        </SafeAreaView>
+        </View>
 
         <ProfileHeader user={user} />
 
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100, // Space for the FAB
+    paddingBottom: 100,
   },
   centerContainer: {
     flex: 1,
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 16,
-    marginTop: 10, // Adjust depending on safe area visually
+    marginTop: 40,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withSequence, withTiming } from 'react-native-reanimated';
-import { Feather } from '@expo/vector-icons';
+import { Entypo, Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 import { User } from '../types';
@@ -34,13 +34,13 @@ export function UserCard({ user }: UserCardProps) {
   const scale = useSharedValue(1);
 
   const toggleFavorite = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsFavorite(!isFavorite);
     
     // Heart pop animation
     scale.value = withSequence(
-      withTiming(1.3, { duration: 150 }),
-      withSpring(1, { damping: 5, stiffness: 200 })
+      withTiming(1.3, { duration: 60 }),
+      withSpring(1, { damping: 30, stiffness: 150 })
     );
   };
 
@@ -54,8 +54,6 @@ export function UserCard({ user }: UserCardProps) {
   const colorPrimary = colors[theme].primary;
   
   const handlePress = () => {
-    // Pass minimal data or just the ID, usually we fetch detail or pass as params
-    // Using Expo Router, we can pass as stringified params if needed or rely on ID to fetch from cache
     router.push({
       pathname: '/(tabs)/[userId]/profile',
       params: { 
@@ -93,11 +91,7 @@ export function UserCard({ user }: UserCardProps) {
             style={[styles.favoriteButton, heartStyle]}
             hitSlop={15}
           >
-            <Feather 
-              name="heart" 
-              size={24} 
-              color={isFavorite ? colors[theme].accent : colors[theme].textSecondary} 
-            />
+            <Entypo name="heart" size={24} color={isFavorite ? colors[theme].accent : colors[theme].textSecondary} />
           </AnimatedPressable>
         </View>
       </LinearGradient>

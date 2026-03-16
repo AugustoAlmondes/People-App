@@ -18,13 +18,13 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
+          title: 'Usuários',
           tabBarIcon: ({ color }) => (
             <SymbolView
               name={{
-                ios: 'chevron.left.forwardslash.chevron.right',
-                android: 'code',
-                web: 'code',
+                ios: 'house',
+                android: 'home',
+                web: 'home',
               }}
               tintColor={color}
               size={28}
@@ -44,8 +44,18 @@ export default function TabLayout() {
       <Tabs.Screen
         name="[userId]"
         options={{
-          href: null, // Hide from the literal tab bar itself
+          href: null,
           headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="favorites"
+        options={{
+          title: 'Favoritos',
+          tabBarIcon: ({ color }) => (
+            <Feather name="heart" size={24} color={color} />
+          ),
         }}
       />
     </Tabs>
