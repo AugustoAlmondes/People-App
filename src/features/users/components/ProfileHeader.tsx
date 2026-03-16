@@ -23,7 +23,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
   const avatarScale = useSharedValue(0);
 
   useEffect(() => {
-    avatarScale.value = withDelay(100, withSpring(1, { damping: 15, stiffness: 100 }));
+    avatarScale.value = withDelay(60, withSpring(1, { damping: 20, stiffness: 150 }));
   }, [avatarScale]);
 
   const animatedAvatarStyle = useAnimatedStyle(() => ({

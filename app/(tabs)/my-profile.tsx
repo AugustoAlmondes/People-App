@@ -59,7 +59,7 @@ export default function MyProfileScreen() {
       <Animated.View entering={FadeInDown.delay(500).duration(400)} style={styles.fabContainer}>
         <View style={styles.actionsRow}>
           <TouchableOpacity 
-            style={[styles.actionButton, styles.secondaryButton, { borderColor: colors[theme].border }]}
+            style={[styles.actionButton, styles.secondaryButton, { borderColor: colors[theme].border, backgroundColor: colors[theme].background }]}
             activeOpacity={0.8}
           >
             <Feather name="settings" size={20} color={colors[theme].text} />

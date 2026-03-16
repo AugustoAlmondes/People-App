@@ -23,7 +23,7 @@ export function ChatInput({ onSend, isTyping = false }: ChatInputProps) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors[theme].surface }]}>
+    <View style={[styles.container, { backgroundColor: colors[theme].surface, paddingBottom: Math.max(insets.bottom, 16) }]}>
 
       {/* Typing indicator logic directly inside the input bar for simplicity in mock scale */}
       {isTyping && (
