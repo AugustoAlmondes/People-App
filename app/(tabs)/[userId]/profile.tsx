@@ -88,7 +88,10 @@ export default function UserProfileScreen() {
         <TouchableOpacity 
           style={[styles.chatButton, { backgroundColor: colors[theme].primary }]}
           activeOpacity={0.8}
-          // onPress={() => router.push({ pathname: '/(tabs)/[userId]/chat', params: { userId: user.login.uuid } })}
+          onPress={() => router.push({ 
+            pathname: '/(tabs)/[userId]/chat', 
+            params: { userId: user.login.uuid, userStr: JSON.stringify(user) } 
+          })}
         >
           <Feather name="message-circle" size={20} color="#FFF" />
           <ThemedText style={styles.chatButtonText}>Iniciar conversa</ThemedText>

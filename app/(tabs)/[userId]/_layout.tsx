@@ -4,6 +4,7 @@ export default function UserLayout() {
   return (
     <Stack>
       <Stack.Screen name="profile" options={{ headerShown: false, presentation: 'modal' }} />
+      <Stack.Screen name="chat" options={{ headerShown: false }} />
     </Stack>
   );
 }
