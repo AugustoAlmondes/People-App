@@ -11,6 +11,7 @@ import { Avatar } from '@/src/shared/components/Avatar';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { useColorScheme } from '@/src/shared/hooks/useColorScheme';
 import { colors } from '@/src/shared/theme/colors';
+import { useFavoritesStore } from '../store/useFavoritesStore';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -29,13 +30,14 @@ export function UserCard({ user }: UserCardProps) {
   const router = useRouter();
   const theme = useColorScheme();
   
-  // Dummy local state for favorite, eventually move to AsyncStorage/Zustand if needed globally
-  const [isFavorite, setIsFavorite] = useState(false);
+  const isFavorite = useFavoritesStore((state) => state.isFavorite(user.login.uuid));
+  const toggleFavoriteStore = useFavoritesStore((state) => state.toggleFavorite);
+
   const scale = useSharedValue(1);
 
   const toggleFavorite = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    setIsFavorite(!isFavorite);
+    toggleFavoriteStore(user);
     
     // Heart pop animation
     scale.value = withSequence(

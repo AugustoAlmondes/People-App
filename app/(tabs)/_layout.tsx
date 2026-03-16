@@ -46,6 +46,7 @@ export default function TabLayout() {
         options={{
           href: null, // Hide from the literal tab bar itself
           headerShown: false,
+          tabBarStyle: { display: 'none' },
         }}
       />
     </Tabs>

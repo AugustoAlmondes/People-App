@@ -8,6 +8,7 @@ import { ThemedView } from '@/src/shared/components/ThemedView';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { useColorScheme } from '@/src/shared/hooks/useColorScheme';
 import { colors } from '@/src/shared/theme/colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { User } from '@/src/features/users/types';
 import { ProfileHeader } from '@/src/features/users/components/ProfileHeader';
@@ -21,6 +22,7 @@ export default function UserProfileScreen() {
   // In a real app we'd fetch or use global state if userStr wasn't passed natively.
   // For the frontend challenge + mock data, parsing the stringified object is fine.
   const user = userStr ? (JSON.parse(userStr) as User) : null;
+  const insets = useSafeAreaInsets();
 
   if (!user) {
     return (
@@ -57,14 +59,14 @@ export default function UserProfileScreen() {
       <ScrollView bounces={false} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Back Button Overlay */}
-        <SafeAreaView style={styles.backButtonSafeArea}>
+        <View style={[styles.backButtonSafeArea, { paddingTop: insets.top }]}>
           <TouchableOpacity 
             style={[styles.backButton, { backgroundColor: colors[theme].surfaceElevated }]} 
             onPress={() => router.back()}
           >
             <Feather name="arrow-left" size={24} color={colors[theme].text} />
           </TouchableOpacity>
-        </SafeAreaView>
+        </View>
 
         <ProfileHeader user={user} />
 
