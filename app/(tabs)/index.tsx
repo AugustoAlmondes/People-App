@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { StyleSheet, FlatList, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, FlatList, View, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 
@@ -25,7 +25,7 @@ export default function UsersListScreen() {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
   // Switch to the real API!
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useUsers(filters);
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useUsers(filters);
 
   // Flatten infinite query pages into a single users array
   const users = useMemo(() => {
@@ -64,6 +64,14 @@ export default function UsersListScreen() {
     <ThemedView style={styles.container}>
       <SafeAreaView edges={['top']} style={{ flex: 1 }}>
         <FlatList
+          refreshControl={
+            <RefreshControl 
+              refreshing={isRefetching} 
+              onRefresh={refetch} 
+              colors={[colorPrimary]}
+              tintColor={colorPrimary}
+            />
+          }
           data={isLoading ? Array.from({ length: 8 }) as any[] : users}
           keyExtractor={(item, index) => isLoading ? String(index) : item.login.uuid}
           renderItem={({ item }) => isLoading ? <SkeletonCard /> : <UserCard user={item} />}
