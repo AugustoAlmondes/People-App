@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { StyleSheet, FlatList, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, FlatList, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 
@@ -13,8 +13,9 @@ import { UserCard } from '@/src/features/users/components/UserCard';
 import { FilterChip } from '@/src/shared/components/FilterChip';
 import { FilterSheet } from '@/src/features/filters/components/FilterSheet';
 import { EmptyState } from '@/src/shared/components/EmptyState';
-
-import { MOCK_USERS } from '@/src/features/users/mockData';
+import { ErrorState } from '@/src/shared/components/ErrorState';
+import { SkeletonCard } from '@/src/features/users/components/SkeletonCard';
+import { useUsers } from '@/src/features/users/hooks/useUsers';
 
 export default function UsersListScreen() {
   const theme = useColorScheme();
@@ -23,17 +24,14 @@ export default function UsersListScreen() {
   const [filters, setFilters] = useState<UserFilters>({});
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
+  // Switch to the real API!
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useUsers(filters);
+
+  // Flatten infinite query pages into a single users array
   const users = useMemo(() => {
-    return MOCK_USERS.filter((user) => {
-      if (filters.gender && filters.gender !== 'todos' && user.gender !== filters.gender) {
-        return false;
-      }
-      if (filters.nat && user.nat !== filters.nat) {
-        return false;
-      }
-      return true;
-    });
-  }, [filters]);
+    if (!data) return [];
+    return data.pages.flatMap((page: any) => page.results || []);
+  }, [data]);
 
   const removeFilter = (key: keyof UserFilters) => {
     setFilters(prev => {
@@ -66,12 +64,36 @@ export default function UsersListScreen() {
     <ThemedView style={styles.container}>
       <SafeAreaView edges={['top']} style={{ flex: 1 }}>
         <FlatList
-          data={users}
-          keyExtractor={(item) => item.login.uuid}
-          renderItem={({ item }) => <UserCard user={item} />}
+          data={isLoading ? Array.from({ length: 8 }) as any[] : users}
+          keyExtractor={(item, index) => isLoading ? String(index) : item.login.uuid}
+          renderItem={({ item }) => isLoading ? <SkeletonCard /> : <UserCard user={item} />}
           contentContainerStyle={styles.listContainer}
           ListHeaderComponent={renderHeader}
-          ListEmptyComponent={<EmptyState />}
+          ListEmptyComponent={
+            isError ? (
+              <ErrorState 
+                message="Tivemos um problema de comunicação com a randomuser.me."
+                onRetry={refetch} 
+              />
+            ) : (
+              <EmptyState 
+                title="Nenhuma pessoa" 
+                message="A API randomuser.me não gerou usuários (Retornou results: []). A API pode estar com instabilidades temporárias." 
+                icon="users"
+              />
+            )
+          }
+          ListFooterComponent={isFetchingNextPage ? (
+            <View style={{ padding: 16 }}>
+              <ActivityIndicator size="small" color={colorPrimary} />
+            </View>
+          ) : null}
+          onEndReached={() => {
+            if (hasNextPage && !isFetchingNextPage && !isLoading) {
+              fetchNextPage();
+            }
+          }}
+          onEndReachedThreshold={0.5}
         />
         
         <FilterSheet 

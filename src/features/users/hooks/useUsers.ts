@@ -8,8 +8,11 @@ export function useUsers(filters: UserFilters) {
     queryFn: ({ pageParam = 1 }) => fetchUsers({ page: pageParam, ...filters }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      // randomuser.me doesn't have a strict end, but we can limit or just keep going
-      // assuming 20 per page, just increment the page number
+      // If the API returns an empty array, there are no more pages to fetch.
+      // This prevents infinite fetching loops, especially during API outages.
+      if (!lastPage.results || lastPage.results.length === 0) {
+        return undefined;
+      }
       return allPages.length + 1;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes cache

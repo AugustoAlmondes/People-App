@@ -67,7 +67,6 @@ export default function UserProfileScreen() {
             <Feather name="arrow-left" size={24} color={colors[theme].text} />
           </TouchableOpacity>
         </View>
-        </View>
 
         <ProfileHeader user={user} />
 

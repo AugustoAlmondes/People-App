@@ -10,35 +10,60 @@ import { colors } from '@/src/shared/theme/colors';
 
 import { ProfileHeader } from '@/src/features/users/components/ProfileHeader';
 import { InfoSection, InfoItem } from '@/src/features/users/components/InfoSection';
-import { MY_PROFILE } from '@/src/features/users/mockData';
+import { useMyProfileStore } from '@/src/features/users/store/useMyProfileStore';
+import { useRouter } from 'expo-router';
+import { EmptyState } from '@/src/shared/components/EmptyState';
 
 export default function MyProfileScreen() {
   const theme = useColorScheme();
-  const user = MY_PROFILE;
+  const router = useRouter();
+  const profile = useMyProfileStore((state) => state.profile);
 
   const contactItems: InfoItem[] = [
-    { icon: 'phone', label: 'Telefone', value: user.phone },
-    { icon: 'smartphone', label: 'Celular', value: user.cell },
-    { icon: 'mail', label: 'E-mail', value: user.email },
+    { icon: 'phone', label: 'Telefone', value: profile?.phone ?? '' },
+    { icon: 'smartphone', label: 'Celular', value: profile?.cell ?? '' },
+    { icon: 'mail', label: 'E-mail', value: profile?.email ?? '' },
   ];
 
   const locationItems: InfoItem[] = [
-    { icon: 'map-pin', label: 'Local', value: `${user.location.city}, ${user.location.state}` },
-    { icon: 'globe', label: 'País', value: user.location.country },
-    { icon: 'navigation', label: 'Coordenadas', value: `${user.location.coordinates.latitude}, ${user.location.coordinates.longitude}` },
+    { icon: 'map-pin', label: 'Local', value: `${profile?.location?.city ?? ''}, ${profile?.location?.state ?? ''}` },
+    { icon: 'globe', label: 'País', value: profile?.location?.country ?? '' },
+    { icon: 'navigation', label: 'Coordenadas', value: `${profile?.location?.coordinates?.latitude ?? ''}, ${profile?.location?.coordinates?.longitude ?? ''}` },
   ];
 
   const personalItems: InfoItem[] = [
-    { icon: 'user', label: 'Idade', value: `28 anos` },
+    { icon: 'user', label: 'Idade', value: `28 anos` }, // Hardcoded for now without DOB in local store, or mock it? Removing it can be an option if we adapt later
     { icon: 'clock', label: 'Fuso Horário', value: 'GMT-3:00' },
   ];
+
+  if (!profile) {
+    return (
+      <ThemedView style={styles.container}>
+        <EmptyState 
+          title="Perfil não configurado" 
+          message="Por favor, edite seu perfil para começar." 
+          icon="user" 
+        />
+        <View style={{ padding: 20 }}>
+          <TouchableOpacity 
+            style={[styles.actionButton, styles.primaryButton, { backgroundColor: colors[theme].primary }]}
+            activeOpacity={0.8}
+            onPress={() => router.push('/edit-profile' as any)}
+          >
+            <Feather name="edit-2" size={20} color="#FFF" />
+            <ThemedText style={styles.primaryButtonText}>Criar Perfil</ThemedText>
+          </TouchableOpacity>
+        </View>
+      </ThemedView>
+    );
+  }
 
   return (
     <ThemedView style={styles.container}>
       <ScrollView bounces={false} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* We don't need a back button here because it's a root tab */}
-        <ProfileHeader user={user} />
+        <ProfileHeader user={profile} />
 
         <Animated.View entering={FadeInDown.delay(200).duration(400)}>
           <InfoSection title="Contato" items={contactItems} />
@@ -68,6 +93,7 @@ export default function MyProfileScreen() {
           <TouchableOpacity 
             style={[styles.actionButton, styles.primaryButton, { backgroundColor: colors[theme].primary }]}
             activeOpacity={0.8}
+            onPress={() => router.push('/edit-profile' as any)}
           >
             <Feather name="edit-2" size={20} color="#FFF" />
             <ThemedText style={styles.primaryButtonText}>Editar Perfil</ThemedText>
