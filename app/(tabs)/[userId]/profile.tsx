@@ -67,6 +67,7 @@ export default function UserProfileScreen() {
             <Feather name="arrow-left" size={24} color={colors[theme].text} />
           </TouchableOpacity>
         </View>
+        </View>
 
         <ProfileHeader user={user} />
 
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100, // Space for the FAB
+    paddingBottom: 100,
   },
   centerContainer: {
     flex: 1,
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 16,
-    marginTop: 10, // Adjust depending on safe area visually
+    marginTop: 40,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

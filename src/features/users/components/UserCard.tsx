@@ -36,7 +36,7 @@ export function UserCard({ user }: UserCardProps) {
   const scale = useSharedValue(1);
 
   const toggleFavorite = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     toggleFavoriteStore(user);
 
     scale.value = withSequence(
@@ -55,7 +55,8 @@ export function UserCard({ user }: UserCardProps) {
   const colorPrimary = colors[theme].primary;
 
   const handlePress = () => {
-
+    // Pass minimal data or just the ID, usually we fetch detail or pass as params
+    // Using Expo Router, we can pass as stringified params if needed or rely on ID to fetch from cache
     router.push({
       pathname: '/(tabs)/[userId]/profile',
       params: {

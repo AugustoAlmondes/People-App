@@ -46,8 +46,19 @@ export default function TabLayout() {
         name="[userId]"
         options={{
           href: null,
+          href: null,
           headerShown: false,
           tabBarStyle: { display: 'none' },
+        }}
+      />
+
+      <Tabs.Screen
+        name="favorites"
+        options={{
+          title: 'Favoritos',
+          tabBarIcon: ({ color }) => (
+            <Feather name="heart" size={24} color={color} />
+          ),
         }}
       />
     </Tabs>
