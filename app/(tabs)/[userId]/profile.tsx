@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, ScrollView, View, TouchableOpacity, SafeAreaView, TouchableWithoutFeedbackComponent, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Feather } from '@expo/vector-icons';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Entypo, Feather } from '@expo/vector-icons';
+import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withSequence, withSpring, withTiming } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 import { ThemedView } from '@/src/shared/components/ThemedView';
 import { ThemedText } from '@/src/shared/components/ThemedText';
@@ -13,17 +14,38 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { User } from '@/src/features/users/types';
 import { ProfileHeader } from '@/src/features/users/components/ProfileHeader';
 import { InfoSection, InfoItem } from '@/src/features/users/components/InfoSection';
+import { useFavoritesStore } from '@/src/features/users/store/useFavoritesStore';
 
 
 export default function UserProfileScreen() {
+  const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
   const { userStr } = useLocalSearchParams<{ userStr: string }>();
   const router = useRouter();
   const theme = useColorScheme();
-  
-  // In a real app we'd fetch or use global state if userStr wasn't passed natively.
-  // For the frontend challenge + mock data, parsing the stringified object is fine.
   const user = userStr ? (JSON.parse(userStr) as User) : null;
   const insets = useSafeAreaInsets();
+  const scale = useSharedValue(1);
+  const isFavorite = useFavoritesStore((state) => state.isFavorite(user?.login.uuid!));
+
+  const toggleFavoriteStore = useFavoritesStore((state) => state.toggleFavorite)
+
+  const toggleFavorite = () => {
+    if (user) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      toggleFavoriteStore(user)
+    };
+
+
+    scale.value = withSequence(
+      withTiming(1.3, { duration: 70 }),
+      withSpring(1, { damping: 20, stiffness: 150 })
+    );
+  };
+
+  const heartStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
 
   if (!user) {
     return (
@@ -56,11 +78,10 @@ export default function UserProfileScreen() {
   return (
     <ThemedView style={styles.container}>
       <ScrollView bounces={false} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        
-        {/* Back Button Overlay */}
+
         <View style={[styles.backButtonSafeArea, { paddingTop: insets.top }]}>
-          <TouchableOpacity 
-            style={[styles.backButton, { backgroundColor: colors[theme].surfaceElevated }]} 
+          <TouchableOpacity
+            style={[styles.backButton, { backgroundColor: colors[theme].surfaceElevated }]}
             onPress={() => router.back()}
           >
             <Feather name="arrow-left" size={24} color={colors[theme].text} />
@@ -69,34 +90,45 @@ export default function UserProfileScreen() {
 
         <ProfileHeader user={user} />
 
-        <Animated.View entering={FadeInDown.delay(200).duration(400)}>
+        <Animated.View>
           <InfoSection title="Contato" items={contactItems} />
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(300).duration(400)}>
+        <Animated.View>
           <InfoSection title="Localização" items={locationItems} />
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(400).duration(400)}>
+        <Animated.View>
           <InfoSection title="Informações Pessoais" items={personalItems} />
         </Animated.View>
 
         <View style={styles.bottomSpacer} />
       </ScrollView>
 
-      {/* Floating Action Button for Chat */}
-      <Animated.View entering={FadeInDown.delay(500).duration(400)} style={styles.fabContainer}>
-        <TouchableOpacity 
+      <Animated.View style={styles.fabContainer}>
+        <TouchableOpacity
           style={[styles.chatButton, { backgroundColor: colors[theme].primary }]}
           activeOpacity={0.8}
-          onPress={() => router.push({ 
-            pathname: '/(tabs)/[userId]/chat', 
-            params: { userId: user.login.uuid, userStr: JSON.stringify(user) } 
+          onPress={() => router.push({
+            pathname: '/(tabs)/[userId]/chat',
+            params: { userId: user.login.uuid, userStr: JSON.stringify(user) }
           })}
         >
           <Feather name="message-circle" size={20} color="#FFF" />
           <ThemedText style={styles.chatButtonText}>Iniciar conversa</ThemedText>
         </TouchableOpacity>
+
+        <AnimatedPressable
+          style={[styles.favoriteButton, { backgroundColor: colors[theme].primary }]}
+          onPress={toggleFavorite}
+          hitSlop={15}
+        >
+          <Entypo
+            name="heart"
+            size={24}
+            color={isFavorite ? colors[theme].accent : colors[theme].surface}
+          />
+        </AnimatedPressable>
       </Animated.View>
     </ThemedView>
   );
@@ -139,15 +171,20 @@ const styles = StyleSheet.create({
   },
   fabContainer: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 50,
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "center",
+    justifyContent: "center",
     left: 20,
     right: 20,
   },
   chatButton: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 16,
+    padding: 10,
     borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -161,4 +198,16 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 16,
   },
+  favoriteButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  }
 });

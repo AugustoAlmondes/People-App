@@ -62,7 +62,6 @@ export default function MyProfileScreen() {
     <ThemedView style={styles.container}>
       <ScrollView bounces={false} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
-        {/* We don't need a back button here because it's a root tab */}
         <ProfileHeader user={profile} />
 
         <Animated.View entering={FadeInDown.delay(200).duration(400)}>
@@ -80,7 +79,6 @@ export default function MyProfileScreen() {
         <View style={styles.bottomSpacer} />
       </ScrollView>
 
-      {/* Floating Action Buttons for Profile Settings */}
       <Animated.View entering={FadeInDown.delay(500).duration(400)} style={styles.fabContainer}>
         <View style={styles.actionsRow}>
           <TouchableOpacity 

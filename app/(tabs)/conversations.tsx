@@ -18,7 +18,6 @@ export default function ConversationsScreen() {
   const router = useRouter();
   const sessions = useChatStoreBase((state) => state.sessions);
 
-  // Sort sessions by most recent message, only include sessions with a snapshot
   const sortedSessions: ChatSession[] = useMemo(() => {
     return Object.values(sessions)
       .filter((s) => s.userSnapshot != null && s.messages.length > 0)

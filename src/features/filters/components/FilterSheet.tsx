@@ -61,7 +61,6 @@ export function FilterSheet({ visible, onClose, currentFilters, onApplyFilters }
     >
       <View style={styles.overlay}>
         <ThemedView style={styles.sheetContainer} elevated>
-          {/* Header */}
           <View style={styles.header}>
             <ThemedText type="subtitle">Filtros</ThemedText>
             <TouchableOpacity onPress={onClose} hitSlop={10}>
@@ -70,8 +69,7 @@ export function FilterSheet({ visible, onClose, currentFilters, onApplyFilters }
           </View>
 
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-            
-            {/* Gender Section */}
+
             <ThemedText type="defaultSemiBold" style={styles.sectionTitle}>Gênero</ThemedText>
             <View style={styles.chipsRow}>
               {GENDERS.map(g => {

@@ -94,11 +94,11 @@ export function UserCard({ user }: UserCardProps) {
             style={[styles.favoriteButton, heartStyle]}
             hitSlop={15}
           >
-            <Entypo
+            {/* <Entypo
               name="heart"
               size={24}
               color={isFavorite ? colors[theme].accent : colors[theme].textSecondary}
-            />
+            /> */}
           </AnimatedPressable>
         </View>
       </LinearGradient>

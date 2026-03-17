@@ -27,8 +27,8 @@ export function SkeletonBox({ width = '100%', height = 20, borderRadius = 8, sty
         withTiming(0.7, { duration: 800 }),
         withTiming(0.3, { duration: 800 })
       ),
-      -1, // infinite
-      true // reverse
+      -1,
+      true
     );
   }, [opacity]);
 

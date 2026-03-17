@@ -20,14 +20,21 @@ import { useUsers } from '@/src/features/users/hooks/useUsers';
 export default function UsersListScreen() {
   const theme = useColorScheme();
   const colorPrimary = colors[theme].primary;
-  
+
   const [filters, setFilters] = useState<UserFilters>({});
   const [isFilterVisible, setIsFilterVisible] = useState(false);
 
-  // Switch to the real API!
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch, isRefetching } = useUsers(filters);
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+    isRefetching
+  } = useUsers(filters);
 
-  // Flatten infinite query pages into a single users array
   const users = useMemo(() => {
     if (!data) return [];
     return data.pages.flatMap((page: any) => page.results || []);
@@ -65,9 +72,9 @@ export default function UsersListScreen() {
       <SafeAreaView edges={['top']} style={{ flex: 1 }}>
         <FlatList
           refreshControl={
-            <RefreshControl 
-              refreshing={isRefetching} 
-              onRefresh={refetch} 
+            <RefreshControl
+              refreshing={isRefetching}
+              onRefresh={refetch}
               colors={[colorPrimary]}
               tintColor={colorPrimary}
             />
@@ -79,14 +86,14 @@ export default function UsersListScreen() {
           ListHeaderComponent={renderHeader}
           ListEmptyComponent={
             isError ? (
-              <ErrorState 
+              <ErrorState
                 message="Tivemos um problema de comunicação com a randomuser.me."
-                onRetry={refetch} 
+                onRetry={refetch}
               />
             ) : (
-              <EmptyState 
-                title="Nenhuma pessoa" 
-                message="A API randomuser.me não gerou usuários (Retornou results: []). A API pode estar com instabilidades temporárias." 
+              <EmptyState
+                title="Nenhuma pessoa"
+                message="A API randomuser.me não gerou usuários (Retornou results: []). A API pode estar com instabilidades temporárias."
                 icon="users"
               />
             )
@@ -103,9 +110,9 @@ export default function UsersListScreen() {
           }}
           onEndReachedThreshold={0.5}
         />
-        
-        <FilterSheet 
-          visible={isFilterVisible} 
+
+        <FilterSheet
+          visible={isFilterVisible}
           currentFilters={filters}
           onClose={() => setIsFilterVisible(false)}
           onApplyFilters={setFilters}

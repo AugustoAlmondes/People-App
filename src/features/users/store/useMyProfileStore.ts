@@ -35,7 +35,6 @@ export const useMyProfileStore = create<MyProfileState>()(
       }),
 
       initializeProfile: (defaultProfile) => set((state) => {
-        // Only initialize if it doesn't exist yet (first app open)
         if (!state.profile) {
           return { profile: defaultProfile };
         }

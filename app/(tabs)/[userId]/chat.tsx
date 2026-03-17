@@ -22,7 +22,6 @@ export default function ChatScreen() {
 
     const user = userStr ? (JSON.parse(userStr) as User) : null;
 
-    // Pass the full user object so the hook can build the AI system prompt and snapshot
     const { messages, isTyping, sendMessage } = useChat(userId, user!);
 
     if (!user) {

@@ -7,6 +7,7 @@ import { Avatar } from '@/src/shared/components/Avatar';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { useColorScheme } from '@/src/shared/hooks/useColorScheme';
 import { colors } from '@/src/shared/theme/colors';
+import { Entypo } from "@expo/vector-icons"
 
 interface ProfileHeaderProps {
   user: User;
@@ -43,16 +44,15 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
       />
-      
+
       <View style={styles.contentContainer}>
         <Animated.View style={[styles.avatarContainer, animatedAvatarStyle]}>
-          <Avatar 
-            uri={user.picture.large} 
-            size={120} 
-            borderColor={colors[theme].surface} 
+          <Avatar
+            uri={user.picture.large}
+            size={120}
+            borderColor={colors[theme].surface}
           />
         </Animated.View>
-        
         <View style={styles.textContainer}>
           <ThemedText type="title" style={styles.name}>{fullName}</ThemedText>
           <ThemedText type="secondary" style={styles.username}>{username} {flag}</ThemedText>

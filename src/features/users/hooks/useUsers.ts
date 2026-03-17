@@ -8,8 +8,6 @@ export function useUsers(filters: UserFilters) {
     queryFn: ({ pageParam = 1 }) => fetchUsers({ page: pageParam, ...filters }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      // If the API returns an empty array, there are no more pages to fetch.
-      // This prevents infinite fetching loops, especially during API outages.
       if (!lastPage.results || lastPage.results.length === 0) {
         return undefined;
       }

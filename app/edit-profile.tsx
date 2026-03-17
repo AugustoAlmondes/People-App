@@ -48,7 +48,6 @@ export default function EditProfileScreen() {
   const [avatarUri, setAvatarUri] = useState(currentProfile.picture.large);
 
   useEffect(() => {
-    // If we mount the edit screen and have NO profile, let's initialize a blank one in store.
     if (!profile) {
       initializeProfile(defaultUser);
     }
