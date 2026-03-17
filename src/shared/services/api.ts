@@ -9,10 +9,11 @@ export interface FetchUsersParams {
 }
 
 export async function fetchUsers(params: FetchUsersParams) {
+  console.log("parametros", params);
   const query = new URLSearchParams({
     page: String(params.page),
     results: String(params.results ?? 20),
-    seed: params.seed ?? 'c2s-challenge',
+    seed: params.seed ? params.seed : "",
   });
 
   if (params.gender && params.gender !== 'todos') {
@@ -22,6 +23,8 @@ export async function fetchUsers(params: FetchUsersParams) {
   if (params.nat) {
     query.append('nat', params.nat);
   }
+
+  console.log("query", query.toString());
 
   const response = await fetch(`${BASE_URL}?${query.toString()}`);
   if (!response.ok) throw new Error('Falha ao buscar usuários');

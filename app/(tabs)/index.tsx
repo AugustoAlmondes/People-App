@@ -35,6 +35,8 @@ export default function UsersListScreen() {
     isRefetching
   } = useUsers(filters);
 
+  console.log('filters', filters)
+
   const users = useMemo(() => {
     if (!data) return [];
     return data.pages.flatMap((page: any) => page.results || []);

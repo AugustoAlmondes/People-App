@@ -46,11 +46,14 @@ export function FilterSheet({ visible, onClose, currentFilters, onApplyFilters }
 
   const toggleGender = (gender: any) => {
     setInternalFilters(prev => ({ ...prev, gender }));
+    console.log(internalFilters)
   };
 
   const toggleNationality = (nat: string) => {
     setInternalFilters(prev => ({ ...prev, nat: prev.nat === nat ? undefined : nat }));
   };
+  
+  console.log(internalFilters)
 
   return (
     <Modal
