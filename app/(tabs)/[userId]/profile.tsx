@@ -14,6 +14,7 @@ import { User } from '@/src/features/users/types';
 import { ProfileHeader } from '@/src/features/users/components/ProfileHeader';
 import { InfoSection, InfoItem } from '@/src/features/users/components/InfoSection';
 
+
 export default function UserProfileScreen() {
   const { userStr } = useLocalSearchParams<{ userStr: string }>();
   const router = useRouter();
@@ -47,8 +48,6 @@ export default function UserProfileScreen() {
     { icon: 'navigation', label: 'Coordenadas', value: `${user.location.coordinates.latitude}, ${user.location.coordinates.longitude}` },
   ];
 
-  // Random personal info since our mock data doesn't have age/timezone from randomuser.me yet
-  // We'll mock it based on their name length or general values just for the layout
   const personalItems: InfoItem[] = [
     { icon: 'user', label: 'Idade', value: `${20 + user.name.first.length} anos` }, // Mock age
     { icon: 'clock', label: 'Fuso Horário', value: 'GMT-3:00' }, // Mock timezone

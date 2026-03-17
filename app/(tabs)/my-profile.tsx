@@ -32,7 +32,7 @@ export default function MyProfileScreen() {
   ];
 
   const personalItems: InfoItem[] = [
-    { icon: 'user', label: 'Idade', value: `28 anos` }, // Hardcoded for now without DOB in local store, or mock it? Removing it can be an option if we adapt later
+    { icon: 'user', label: 'Idade', value: `28 anos` },
     { icon: 'clock', label: 'Fuso Horário', value: 'GMT-3:00' },
   ];
 
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100, // Space for the FABs
+    paddingBottom: 100,
   },
   bottomSpacer: {
     height: 40,

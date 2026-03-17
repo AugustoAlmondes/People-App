@@ -1,12 +1,11 @@
-import Constants from 'expo-constants';
 import { HFMessage } from '@/src/features/chat/types';
 
 const HF_URL = 'https://router.huggingface.co/v1/chat/completions';
 const MODEL = 'meta-llama/Llama-3.1-8B-Instruct:sambanova';
 
 function getToken(): string {
-  const token = Constants.expoConfig?.extra?.huggingFaceToken as string | undefined;
-  if (!token) throw new Error('[HuggingFace] Token não configurado em app.json extra.');
+  const token = process.env.EXPO_PUBLIC_HUGGING_FACE_TOKEN;
+  if (!token) throw new Error('[HuggingFace] Token não configurado em .env (EXPO_PUBLIC_HUGGING_FACE_TOKEN)');
   return token;
 }
 
@@ -19,8 +18,6 @@ export async function sendAiMessage(messages: HFMessage[]): Promise<string> {
     },
     body: JSON.stringify({ model: MODEL, messages }),
   });
-
-  console.log(response);
 
   if (!response.ok) {
     const errorBody = await response.text();

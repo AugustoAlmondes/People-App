@@ -2,9 +2,9 @@ import { Stack } from 'expo-router';
 
 export default function UserLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="profile" options={{ headerShown: false, presentation: 'modal' }} />
-      <Stack.Screen name="chat" options={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="profile" />
+      <Stack.Screen name="chat" />
     </Stack>
   );
 }

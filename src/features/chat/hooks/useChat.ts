@@ -45,17 +45,13 @@ export function useChat(userId: string, user: User) {
         role: 'system',
         content: buildSystemPrompt(user),
       };
-      console.log('systemMessage', systemMessage);
       const userMessage: HFMessage = { role: 'user', content: text };
-      console.log('userMessage', userMessage);
 
       const currentHistory = session?.aiHistory ?? [];
       const messagesForApi: HFMessage[] = [systemMessage, ...currentHistory, userMessage];
-      console.log('messagesForApi', messagesForApi);
 
       try {
         const aiReply = await sendAiMessage(messagesForApi);
-        console.log('aiReply', aiReply);
 
         _receiveMessage(userId, aiReply);
 

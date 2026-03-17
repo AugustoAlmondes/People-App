@@ -10,7 +10,7 @@ interface ChatInputProps {
   isTyping?: boolean;
 }
 
-export function ChatInput({ onSend, isTyping = false }: ChatInputProps) {
+export default  function ChatInput({ onSend, isTyping = false }: ChatInputProps) {
   const [text, setText] = useState('');
   const theme = useColorScheme();
   const insets = useSafeAreaInsets();
@@ -23,7 +23,7 @@ export function ChatInput({ onSend, isTyping = false }: ChatInputProps) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors[theme].surface, paddingBottom: Math.max(insets.bottom, 16) }]}>
+    <View style={[styles.container, { backgroundColor: colors[theme].surface, paddingBottom: insets.bottom + 12 }]}>
 
       {/* Typing indicator logic directly inside the input bar for simplicity in mock scale */}
       {isTyping && (

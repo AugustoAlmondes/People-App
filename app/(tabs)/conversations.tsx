@@ -30,8 +30,6 @@ export default function ConversationsScreen() {
 
   const handleOpen = (session: ChatSession) => {
     if (!session.userSnapshot) return;
-    // We navigate to the chat screen — userStr is required by chat.tsx
-    // We reconstruct a minimal User-compatible object from the snapshot
     const minimalUser = {
       login: { uuid: session.userSnapshot.uuid, username: '' },
       name: { title: '', first: session.userSnapshot.firstName, last: session.userSnapshot.lastName },

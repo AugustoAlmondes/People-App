@@ -13,7 +13,7 @@ import { colors } from '@/src/shared/theme/colors';
 import { User } from '@/src/features/users/types';
 import { useChat } from '@/src/features/chat/hooks/useChat';
 import { MessageBubble } from '@/src/features/chat/components/MessageBubble';
-import { ChatInput } from '@/src/features/chat/components/ChatInput';
+import ChatInput from '@/src/features/chat/components/ChatInput';
 
 export default function ChatScreen() {
     const { userId, userStr } = useLocalSearchParams<{ userId: string; userStr: string }>();
