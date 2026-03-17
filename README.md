@@ -81,6 +81,11 @@ Existe um comportamento visual intermitente na tela de Chat:
 - **O Problema**: O input está localizado corretamente na base da tela. No entanto, ao abrir o teclado e fechá-lo logo em seguida, o input "salta" e fica posicionado um pouco mais acima de onde estava originalmente, criando um espaço indesejado abaixo dele.
 - **O que foi tentado**: Ajustes no `KeyboardAvoidingView` (behavior: padding vs height) e uso do `SafeAreaView`. O problema parece estar relacionado à forma como o Android/iOS notifica o layout sobre a dissipação da altura do teclado em tempo real dentro de contêineres com `flex: 1`.
 
+### 3. Perfil favoritado
+No sistema é possível adicionar um usuário aos favoritos:
+- **O Problema**: Ao favoritar um usuário na tela inicial, o perfil do mesmo é salvo na tela de favoritos. No entando, mesmo com a atualização dos usuário na tela inicial, o usuário que está na posição que antes era o favorito, também será favorito. 
+- **O que foi tentado**: Remover a opção de adicionar o usuário aos favoritos no card da tela inicial e mover a opção para a tela de perfil do usuário.
+
 ---
 
 ## 🤖 Integração com IA (HuggingFace)
