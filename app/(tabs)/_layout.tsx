@@ -15,6 +15,15 @@ export default function TabLayout() {
         tabBarActiveTintColor: colors[colorScheme].primary,
         headerShown: false,
       }}>
+        <Tabs.Screen
+          name="conversations"
+          options={{
+            title: 'Conversas',
+            tabBarIcon: ({ color }) => (
+              <Entypo name="chat" size={20} color={color} />
+            ),
+          }}
+        />
       <Tabs.Screen
         name="index"
         options={{

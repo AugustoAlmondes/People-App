@@ -21,7 +21,9 @@ export default function ChatScreen() {
     const theme = useColorScheme();
 
     const user = userStr ? (JSON.parse(userStr) as User) : null;
-    const { messages, isTyping, sendMessage } = useChat(userId);
+
+    // Pass the full user object so the hook can build the AI system prompt and snapshot
+    const { messages, isTyping, sendMessage } = useChat(userId, user!);
 
     if (!user) {
         return (
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
     },
     headerStatusText: {
         fontSize: 12,
-        color: '#4ADE80', // same as success/online in theme
+        color: '#4ADE80',
         marginTop: 2,
     },
     listContainer: {

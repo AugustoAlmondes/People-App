@@ -1,13 +1,14 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ChatSession, Message } from './types';
+import { ChatSession, HFMessage, Message, UserSnapshot } from './types';
 import * as Crypto from 'expo-crypto';
 
 interface ChatStore {
   sessions: Record<string, ChatSession>;
-  sendMessage: (userId: string, text: string) => void;
+  sendMessage: (userId: string, text: string, snapshot?: UserSnapshot) => void;
   receiveMessage: (userId: string, text: string) => void;
+  appendToAiHistory: (userId: string, messages: HFMessage[]) => void;
   getSession: (userId: string) => ChatSession | undefined;
 }
 
@@ -16,7 +17,7 @@ export const useChatStoreBase = create<ChatStore>()(
     (set, get) => ({
       sessions: {},
 
-      sendMessage: (userId, text) => {
+      sendMessage: (userId, text, snapshot) => {
         const newMessage: Message = {
           id: Crypto.randomUUID(),
           text,
@@ -30,6 +31,7 @@ export const useChatStoreBase = create<ChatStore>()(
             userId,
             messages: [],
             lastMessageAt: new Date(0),
+            aiHistory: [],
           };
 
           return {
@@ -37,14 +39,16 @@ export const useChatStoreBase = create<ChatStore>()(
               ...state.sessions,
               [userId]: {
                 ...currentSession,
-                messages: [newMessage, ...currentSession.messages], // Insert at top for inverted FlatList
+                messages: [newMessage, ...currentSession.messages],
                 lastMessageAt: newMessage.sentAt,
+                // Save snapshot only once (when session is first created)
+                userSnapshot: currentSession.userSnapshot ?? snapshot,
               },
             },
           };
         });
 
-        // Simulate reading the message after 1 second
+        // Mark as "read" after 1 second to simulate delivery
         setTimeout(() => {
           set((state) => {
             const currentSession = state.sessions[userId];
@@ -57,10 +61,7 @@ export const useChatStoreBase = create<ChatStore>()(
             return {
               sessions: {
                 ...state.sessions,
-                [userId]: {
-                  ...currentSession,
-                  messages: updatedMessages,
-                },
+                [userId]: { ...currentSession, messages: updatedMessages },
               },
             };
           });
@@ -81,6 +82,7 @@ export const useChatStoreBase = create<ChatStore>()(
             userId,
             messages: [],
             lastMessageAt: new Date(0),
+            aiHistory: [],
           };
 
           return {
@@ -96,6 +98,23 @@ export const useChatStoreBase = create<ChatStore>()(
         });
       },
 
+      appendToAiHistory: (userId, messages) => {
+        set((state) => {
+          const currentSession = state.sessions[userId];
+          if (!currentSession) return state;
+
+          return {
+            sessions: {
+              ...state.sessions,
+              [userId]: {
+                ...currentSession,
+                aiHistory: [...currentSession.aiHistory, ...messages],
+              },
+            },
+          };
+        });
+      },
+
       getSession: (userId) => {
         return get().sessions[userId];
       },
@@ -103,22 +122,24 @@ export const useChatStoreBase = create<ChatStore>()(
     {
       name: 'people-app-chat-storage',
       storage: createJSONStorage(() => AsyncStorage),
-      // We need to parse ISO dates back to Date objects since JSON.stringify converts them to strings
+      // Parse ISO date strings back to Date objects on hydration
       merge: (persistedState: any, currentState) => {
         if (!persistedState || !persistedState.sessions) return currentState;
-        
+
         const parsedSessions: Record<string, ChatSession> = {};
         for (const [userId, session] of Object.entries<any>(persistedState.sessions)) {
           parsedSessions[userId] = {
             userId: session.userId,
             lastMessageAt: new Date(session.lastMessageAt),
+            aiHistory: session.aiHistory ?? [],
+            userSnapshot: session.userSnapshot,
             messages: session.messages.map((m: any) => ({
               ...m,
               sentAt: new Date(m.sentAt),
             })),
           };
         }
-        
+
         return {
           ...currentState,
           sessions: parsedSessions,
