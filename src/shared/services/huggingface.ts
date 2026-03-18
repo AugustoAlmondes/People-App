@@ -10,6 +10,7 @@ function getToken(): string {
 }
 
 export async function sendAiMessage(messages: HFMessage[]): Promise<string> {
+
   const response = await fetch(HF_URL, {
     method: 'POST',
     headers: {

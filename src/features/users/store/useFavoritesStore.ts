@@ -34,7 +34,7 @@ export const useFavoritesStore = create<FavoritesState>()(
       },
     }),
     {
-      name: 'favorites-storage', // unique name for the storage
+      name: 'favorites-storage',
       storage: createJSONStorage(() => AsyncStorage),
     }
   )
